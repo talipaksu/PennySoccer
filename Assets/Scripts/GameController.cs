@@ -14,7 +14,8 @@ public class GameController : MonoBehaviour
     public GameObject[] playerPrefabs;
     private GameObject player1;
     private GameObject player2;
-    public GameObject coinPrefab;
+    public GameObject cameraAndCoinPrefab;
+    public static GameObject cameraAndCoindReal;
     public static GameObject coinReal;
     private Player player1Status;
     private Player player2Status;
@@ -22,7 +23,8 @@ public class GameController : MonoBehaviour
 
     void Awake()
     {
-        coinReal = Instantiate(coinPrefab, new Vector3(0, 1.3f, 0), Quaternion.identity);
+        cameraAndCoindReal = Instantiate(cameraAndCoinPrefab, new Vector3(0, 1.3f, 0), Quaternion.identity);
+        coinReal = cameraAndCoindReal.transform.Find("Coin").gameObject;
         soccerBall = coinReal.GetComponent<SoccerBall>();
     }
 
