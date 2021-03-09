@@ -3,49 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum MatchState { START, PLAYER_1_TURN, PLAYER_2_TURN, PLAYER_1_WIN, PLAYER_2_WIN, PLAYER_1_LOST, PLAYER_2_LOST }
 public class GameController : MonoBehaviour
 {
     public Text scoreText;
     public Text timerText;
-    public int matchTime = 120;
+    private int matchTime = 120;
     private float startTime = 0;
     private bool matchActive = false;
-    public GameObject prefab;
-    private GameObject[] playerGameObjects = new GameObject[2];
-    private Player[] players = new Player[2];
+    public GameObject[] playerPrefabs;
+    private GameObject player1;
+    private GameObject player2;
+    public GameObject coinPrefab;
+    public static GameObject coinReal;
+    private Player player1Status;
+    private Player player2Status;
+    private SoccerBall soccerBall;
 
+    void Awake()
+    {
+        coinReal = Instantiate(coinPrefab, new Vector3(0, 1.3f, 0), Quaternion.identity);
+        soccerBall = coinReal.GetComponent<SoccerBall>();
+    }
 
     void Start()
     {
+        player1 = Instantiate(playerPrefabs[0], new Vector3(0, 0, 0), Quaternion.identity);
+        player2 = Instantiate(playerPrefabs[1], new Vector3(0, 0, 0), Quaternion.identity);
 
-        for (int i = 0; i < 2; i++)
-        {
-            playerGameObjects[i] = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);
-            players[i] = playerGameObjects[i].GetComponent<Player>();
-            players[i].score = 0;
-        }
+        player1Status = player1.GetComponent<Player>();
+        player2Status = player2.GetComponent<Player>();
 
         SetTimeDisplay(matchTime);
         startTime = Time.time;
         matchActive = true;
-    }
 
-    public void IncrementScore(string tag)
-    {
-        if (matchActive)
-        {
-            if ("RightGoalTrigger" == tag)
-            {
-                players[0].score++;
-            }
-            else if ("LeftGoalTrigger" == tag)
-            {
-                players[1].score++;
-            }
-
-            scoreText.text = "Score : " + players[0].score + " : " + players[1].score;
-        }
-
+        soccerBall.player1GoalEvent.AddListener(IncrementPlayer1Score);
+        soccerBall.player2GoalEvent.AddListener(IncrementPlayer2Score);
+        
     }
 
     void Update()
@@ -63,7 +58,23 @@ public class GameController : MonoBehaviour
             timerText.color = Color.red;
         }
     }
+    private void IncrementPlayer1Score()
+    {
+        if (matchActive)
+        {
+            player1Status.score++;
+            scoreText.text = "Score : " + player1Status.score + " : " + player2Status.score;
+        }
+    }
 
+    private void IncrementPlayer2Score()
+    {
+        if (matchActive)
+        {
+            player2Status.score++;
+            scoreText.text = "Score : " + player1Status.score + " : " + player2Status.score;
+        }
+    }
 
     private void SetTimeDisplay(float timeDisplay)
     {
