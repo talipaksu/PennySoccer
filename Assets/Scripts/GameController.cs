@@ -3,33 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum MatchState { START, PLAYER_1_TURN, PLAYER_2_TURN, PLAYER_1_WIN, PLAYER_2_WIN, PLAYER_1_LOST, PLAYER_2_LOST }
 public class GameController : MonoBehaviour
 {
+    public enum States
+    {
+        IDLE, START, PLAYER_1_TURN, PLAYER_2_TURN, PLAYER_1_WIN, PLAYER_2_WIN, PLAYER_1_LOST, PLAYER_2_LOST
+    }
     public Text scoreText;
     public Text timerText;
     private int matchTime = 120;
     private float startTime = 0;
     private bool matchActive = false;
+
     public GameObject[] playerPrefabs;
     private GameObject player1;
     private GameObject player2;
+
     public GameObject cameraAndCoinPrefab;
     public static GameObject cameraAndCoindReal;
     public static GameObject coinReal;
     private Player player1Status;
     private Player player2Status;
     private SoccerBall soccerBall;
+    private TakeShot takeShot;
+    private GameObject cameraController;
+    private Animator animator;
+    public static States state = States.IDLE;
 
     void Awake()
     {
         cameraAndCoindReal = Instantiate(cameraAndCoinPrefab, new Vector3(0, 1.3f, 0), Quaternion.identity);
         coinReal = cameraAndCoindReal.transform.Find("Coin").gameObject;
+        cameraController = cameraAndCoindReal.transform.Find("CameraController").gameObject;
+        animator = cameraController.GetComponent<Animator>();
         soccerBall = coinReal.GetComponent<SoccerBall>();
     }
 
     void Start()
     {
+        state = States.PLAYER_1_TURN;
+
+        SetTriggers("Player1TurnTrigger");
+
         player1 = Instantiate(playerPrefabs[0], new Vector3(0, 0, 0), Quaternion.identity);
         player2 = Instantiate(playerPrefabs[1], new Vector3(0, 0, 0), Quaternion.identity);
 
@@ -42,7 +57,7 @@ public class GameController : MonoBehaviour
 
         soccerBall.player1GoalEvent.AddListener(IncrementPlayer1Score);
         soccerBall.player2GoalEvent.AddListener(IncrementPlayer2Score);
-        
+
     }
 
     void Update()
@@ -66,6 +81,13 @@ public class GameController : MonoBehaviour
         {
             player1Status.score++;
             scoreText.text = "Score : " + player1Status.score + " : " + player2Status.score;
+
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName("Player1Turn"))
+            {
+                animator.ResetTrigger("Player1TurnTrigger");
+                SetTriggers("Player2TurnTrigger");
+                state = States.PLAYER_2_TURN;
+            }
         }
     }
 
@@ -75,6 +97,12 @@ public class GameController : MonoBehaviour
         {
             player2Status.score++;
             scoreText.text = "Score : " + player1Status.score + " : " + player2Status.score;
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName("Player2Turn"))
+            {
+                animator.ResetTrigger("Player2TurnTrigger");
+                SetTriggers("Player1TurnTrigger");
+                state = States.PLAYER_1_TURN;
+            }
         }
     }
 
@@ -90,4 +118,36 @@ public class GameController : MonoBehaviour
         int minutes = (secondsToShow - seconds) / 60;
         return minutes.ToString() + ":" + secondsDisplay;
     }
+
+
+    public void SetTriggerAndChangeStateForPlayer1()
+    {
+        SetTriggers("Player1TurnTrigger");
+        state = States.PLAYER_1_TURN;
+    }
+    public void SetTriggerAndChangeStateForPlayer2()
+    {
+        SetTriggers("Player2TurnTrigger");
+        state = States.PLAYER_2_TURN;
+    }
+    public void SetTriggers(string trigger)
+    {
+        animator.SetTrigger(trigger);
+    }
+
+    public static void ChangeState(States stateTo)
+    {
+        if (state == stateTo)
+            return;
+        state = stateTo;
+    }
+
+    public static bool IsState(States stateTo)
+    {
+        if (state == stateTo)
+            return true;
+        return false;
+    }
+
+
 }

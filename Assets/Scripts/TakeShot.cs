@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TakeShot : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class TakeShot : MonoBehaviour
     private Rigidbody rigidbody;
     Camera camera;
 
+    public UnityEvent player1TurnEvent;
+    public UnityEvent player2TurnEvent;
     void Start()
     {
         coinReal = GameController.coinReal;
@@ -45,10 +48,18 @@ public class TakeShot : MonoBehaviour
             {
                 mouseReleasePoint = Camera.main.ScreenToWorldPoint(tmpPoint);
 
-
-                distanceVector.x = mouseClickPoint.x - mouseReleasePoint.x;
-                distanceVector.y = mouseClickPoint.y - mouseReleasePoint.y;
-                distanceVector.z = mouseClickPoint.z - mouseReleasePoint.z;
+                if (GameController.IsState(GameController.States.PLAYER_1_TURN))
+                {
+                    distanceVector.x = -1 * (mouseClickPoint.x - mouseReleasePoint.x);
+                    distanceVector.y = -1 * (mouseClickPoint.y - mouseReleasePoint.y);
+                    distanceVector.z = -1 * (mouseClickPoint.z - mouseReleasePoint.z);
+                }
+                else
+                {
+                    distanceVector.x = mouseClickPoint.x - mouseReleasePoint.x;
+                    distanceVector.y = mouseClickPoint.y - mouseReleasePoint.y;
+                    distanceVector.z = mouseClickPoint.z - mouseReleasePoint.z;
+                }
 
                 lineEndPoint = lineStartPoint - distanceVector;
 

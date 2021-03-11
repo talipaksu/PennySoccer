@@ -5,8 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Fire
-  - LeftGoalTrigger
-  - RightGoalTrigger
+  - Player1GoalTrigger
+  - Player2GoalTrigger
   layers:
   - Default
   - TransparentFX

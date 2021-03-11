@@ -28,13 +28,13 @@ public class SoccerBall : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "LeftGoalTrigger")
-        {
-            player1GoalEvent.Invoke();
-        }
-        else if (other.gameObject.tag == "RightGoalTrigger")
+        if (other.gameObject.tag == "Player1GoalTrigger")
         {
             player2GoalEvent.Invoke();
+        }
+        else if (other.gameObject.tag == "Player2GoalTrigger")
+        {
+            player1GoalEvent.Invoke();
         }
 
         rigidbody.velocity = Vector3.zero;
