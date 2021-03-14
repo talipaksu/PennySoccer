@@ -27,8 +27,10 @@ public class GameController : MonoBehaviour
     private SoccerBall soccerBall;
     private TakeShot takeShot;
     private GameObject cameraController;
-    private Animator animator;
+    private static Animator animator;
     public static States state = States.IDLE;
+
+    public static bool turnFlag;
 
     void Awake()
     {
@@ -82,12 +84,12 @@ public class GameController : MonoBehaviour
             player1Status.score++;
             scoreText.text = "Score : " + player1Status.score + " : " + player2Status.score;
 
-            if (animator.GetCurrentAnimatorStateInfo(0).IsName("Player1Turn"))
+            /*if (animator.GetCurrentAnimatorStateInfo(0).IsName("Player1Turn"))
             {
                 animator.ResetTrigger("Player1TurnTrigger");
                 SetTriggers("Player2TurnTrigger");
                 state = States.PLAYER_2_TURN;
-            }
+            }*/
         }
     }
 
@@ -97,12 +99,12 @@ public class GameController : MonoBehaviour
         {
             player2Status.score++;
             scoreText.text = "Score : " + player1Status.score + " : " + player2Status.score;
-            if (animator.GetCurrentAnimatorStateInfo(0).IsName("Player2Turn"))
+            /*if (animator.GetCurrentAnimatorStateInfo(0).IsName("Player2Turn"))
             {
                 animator.ResetTrigger("Player2TurnTrigger");
                 SetTriggers("Player1TurnTrigger");
                 state = States.PLAYER_1_TURN;
-            }
+            }*/
         }
     }
 
@@ -120,17 +122,19 @@ public class GameController : MonoBehaviour
     }
 
 
-    public void SetTriggerAndChangeStateForPlayer1()
+    public static void SetTriggerAndChangeStateForPlayer1()
     {
         SetTriggers("Player1TurnTrigger");
         state = States.PLAYER_1_TURN;
+
     }
-    public void SetTriggerAndChangeStateForPlayer2()
+    public static void SetTriggerAndChangeStateForPlayer2()
     {
         SetTriggers("Player2TurnTrigger");
         state = States.PLAYER_2_TURN;
+
     }
-    public void SetTriggers(string trigger)
+    public static void SetTriggers(string trigger)
     {
         animator.SetTrigger(trigger);
     }
@@ -148,6 +152,7 @@ public class GameController : MonoBehaviour
             return true;
         return false;
     }
+
 
 
 }

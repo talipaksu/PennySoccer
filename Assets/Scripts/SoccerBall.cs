@@ -10,18 +10,36 @@ public class SoccerBall : MonoBehaviour
     public UnityEvent onMouseOverEvent;
     public Rigidbody rigidbody;
 
+    private static bool isMoving;
+    public static bool IsMoving
+    {
+        get { return isMoving; }
+        set
+        {
+            isMoving = value;
+        }
+    }
+
+    void Awake()
+    {
+
+    }
     void Start()
     {
+
     }
 
     void Update()
     {
+
+        //Debug.Log("soccerball is moving : " + isMoving);
     }
     void OnMouseOver()
     {
         //Debug.Log("soccerball onmouseover");
         if (Input.GetMouseButtonDown(0))
         {
+            Debug.Log("SoccerBall - OnMouseOver - GetMouseButtonDown");
             onMouseOverEvent.Invoke();
         }
     }

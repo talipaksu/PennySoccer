@@ -15,7 +15,6 @@ public class TakeShot : MonoBehaviour
     private Vector3 tmpPoint;
     private float distance;
     public float powerFactor = 250.0f;
-    private bool fingerOverCoin;
     private GameObject coinReal;
     private SoccerBall soccerBall;
     private Rigidbody rigidbody;
@@ -23,6 +22,8 @@ public class TakeShot : MonoBehaviour
 
     public UnityEvent player1TurnEvent;
     public UnityEvent player2TurnEvent;
+    private bool shotFired;
+    private static bool mouseClicked;
     void Start()
     {
         coinReal = GameController.coinReal;
@@ -34,7 +35,13 @@ public class TakeShot : MonoBehaviour
 
     void Update()
     {
-        if (fingerOverCoin)
+
+    }
+
+    public IEnumerator TakeAShot()
+    {
+        mouseClicked = true;
+        while (!shotFired)
         {
             tmpPoint.x = Input.mousePosition.x;
             tmpPoint.y = Input.mousePosition.y;
@@ -67,17 +74,56 @@ public class TakeShot : MonoBehaviour
             }
             if (Input.GetMouseButtonUp(0))
             {
+
                 distance = Vector3.Distance(lineStartPoint, lineEndPoint);
                 direction = lineStartPoint - lineEndPoint;
                 direction.y = 0;
                 direction = direction.normalized;
                 rigidbody.AddForce(direction * powerFactor * distance);
                 EndLine();
-                fingerOverCoin = false;
+                shotFired = true;
             }
+            Debug.Log("TakeAShot WHILE İÇİ");
+            yield return null;
+        }
+        Debug.Log("TakeAShot WHILE SONRASI");
+        yield return StartCoroutine(CheckMoving());
+        if (SoccerBall.IsMoving == false)
+        {
+            ChangeTurn();
         }
     }
-
+    public IEnumerator CheckMoving()
+    {
+        Vector3 startPos = transform.position;
+        yield return new WaitForSeconds(3f);
+        Vector3 finalPos = transform.position;
+        if (startPos.x != finalPos.x || startPos.y != finalPos.y)
+        {
+            SoccerBall.IsMoving = true;
+        }
+        else
+        {
+            SoccerBall.IsMoving = false;
+        }
+        
+    }
+    public void ChangeTurn()
+    {
+        if (GameController.state == GameController.States.PLAYER_1_TURN)
+        {
+            GameController.SetTriggerAndChangeStateForPlayer2();
+            Debug.Log("GameController.SetTriggerAndChangeStateForPlayer2();");
+        }
+        else if (GameController.state == GameController.States.PLAYER_2_TURN)
+        {
+            GameController.SetTriggerAndChangeStateForPlayer1();
+            Debug.Log("GameController.SetTriggerAndChangeStateForPlayer1();");
+        }
+        shotFired = false;
+        SoccerBall.IsMoving = true;
+        mouseClicked = false;
+    }
     public void DrawLine(Vector3 startPoint, Vector3 endPoint)
     {
         startPoint.y = 0;
@@ -95,7 +141,11 @@ public class TakeShot : MonoBehaviour
 
     private void MouseOverOnCoin()
     {
-        fingerOverCoin = true;
+        if (mouseClicked == false)
+        {
+            Debug.Log("TakeAShot - MouseOverCoin");
+            StartCoroutine(TakeAShot());
+        }
     }
 
 }
