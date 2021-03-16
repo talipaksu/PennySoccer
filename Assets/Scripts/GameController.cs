@@ -124,12 +124,14 @@ public class GameController : MonoBehaviour
 
     public static void SetTriggerAndChangeStateForPlayer1()
     {
+        animator.ResetTrigger("Player2TurnTrigger");
         SetTriggers("Player1TurnTrigger");
         state = States.PLAYER_1_TURN;
 
     }
     public static void SetTriggerAndChangeStateForPlayer2()
     {
+        animator.ResetTrigger("Player1TurnTrigger");
         SetTriggers("Player2TurnTrigger");
         state = States.PLAYER_2_TURN;
 

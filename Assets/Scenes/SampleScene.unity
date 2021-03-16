@@ -1861,7 +1861,7 @@ MonoBehaviour:
   playerPrefabs:
   - {fileID: 5247083397633519109, guid: 9d9c9acefc819aa4d89fe96cd040442a, type: 3}
   - {fileID: 5247083397633519109, guid: 9d9c9acefc819aa4d89fe96cd040442a, type: 3}
-  cameraAndCoinPrefab: {fileID: 1117494494248565329, guid: 41e469411eb8a414e96c577287b1ba46, type: 3}
+  cameraAndCoinPrefab: {fileID: 1004371800537964319, guid: bff231b22d2031e4bb21dade96f35b1c, type: 3}
 --- !u!1 &802490778
 GameObject:
   m_ObjectHideFlags: 0
@@ -3020,6 +3020,7 @@ GameObject:
   - component: {fileID: 1570111456}
   - component: {fileID: 1570111455}
   - component: {fileID: 1570111459}
+  - component: {fileID: 1570111458}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -3092,6 +3093,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+--- !u!114 &1570111458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1570111454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c11265b855408d42af33d62691f5194, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ChannelMask: 1
+  m_Gain: 1
+  m_Use2DDistance: 0
 --- !u!114 &1570111459
 MonoBehaviour:
   m_ObjectHideFlags: 0

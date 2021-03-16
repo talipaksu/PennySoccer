@@ -24,12 +24,16 @@ public class TakeShot : MonoBehaviour
     public UnityEvent player2TurnEvent;
     private bool shotFired;
     private static bool mouseClicked;
+
+    Cinemachine.CinemachineImpulseSource impulseSource;
     void Start()
     {
         coinReal = GameController.coinReal;
         rigidbody = coinReal.GetComponent<Rigidbody>();
         soccerBall = coinReal.GetComponent<SoccerBall>();
         soccerBall.onMouseOverEvent.AddListener(MouseOverOnCoin);
+        impulseSource = coinReal.GetComponent<Cinemachine.CinemachineImpulseSource>();
+
         camera = Camera.main;
     }
 
@@ -82,6 +86,7 @@ public class TakeShot : MonoBehaviour
                 rigidbody.AddForce(direction * powerFactor * distance);
                 EndLine();
                 shotFired = true;
+                impulseSource.GenerateImpulse(camera.transform.forward * distance/10);
             }
             Debug.Log("TakeAShot WHILE İÇİ");
             yield return null;
@@ -106,7 +111,7 @@ public class TakeShot : MonoBehaviour
         {
             SoccerBall.IsMoving = false;
         }
-        
+
     }
     public void ChangeTurn()
     {

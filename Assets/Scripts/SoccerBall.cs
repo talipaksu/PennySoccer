@@ -10,6 +10,7 @@ public class SoccerBall : MonoBehaviour
     public UnityEvent onMouseOverEvent;
     public Rigidbody rigidbody;
 
+    public Transform ghostTransform;
     private static bool isMoving;
     public static bool IsMoving
     {
@@ -19,6 +20,7 @@ public class SoccerBall : MonoBehaviour
             isMoving = value;
         }
     }
+    private Vector3 velocity = Vector3.zero;
 
     void Awake()
     {
@@ -33,6 +35,12 @@ public class SoccerBall : MonoBehaviour
     {
 
         //Debug.Log("soccerball is moving : " + isMoving);
+    }
+    void LateUpdate()
+    {
+        ghostTransform.position = new Vector3(transform.position.x, ghostTransform.position.y, transform.position.z);
+        var desiredPosition = new Vector3(transform.position.x, ghostTransform.position.y, transform.position.z);
+        ghostTransform.position = Vector3.SmoothDamp(ghostTransform.position, desiredPosition, ref velocity, 1f, 1f);
     }
     void OnMouseOver()
     {
